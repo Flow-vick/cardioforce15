@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programme de Sport</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="home-page">
+    <div class="home-container">
+        <img src="logo.png" alt="Logo Programme de Sport" class="start-logo">
+        <a href="login.html" class="start-button" id="login-button">Connexion</a>
+    </div>
+    <audio id="thunder-sound" src="thunder.mp3"></audio>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginButton = document.getElementById('login-button');
+            const thunderSound = document.getElementById('thunder-sound');
+            loginButton.addEventListener('click', (e) => {
+                e.preventDefault(); // Empêche la redirection immédiate
+                thunderSound.play().catch(error => {
+                    console.log("Erreur lors de la lecture du son :", error);
+                });
+                // Redirige après un délai de 3 secondes pour laisser le son se jouer
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>

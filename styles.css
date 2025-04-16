@@ -1,0 +1,267 @@
+/* Styles pour la page d'accueil (index.html) */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a;
+    margin: 0;
+    padding: 0;
+}
+
+.home-container {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.logo {
+    max-width: 200px;
+    margin-bottom: 20px;
+}
+
+.start-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ff4500;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.start-button:hover {
+    background-color: #e03e00;
+}
+
+/* Styles pour la page de connexion (login.html) */
+body.login-page {
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(51, 51, 51, 0.8); /* Fond semi-transparent pour lisibilité */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+h1, h2 {
+    color: #fff;
+}
+
+p, label {
+    color: #fff;
+}
+
+.login-form, .signup-form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.login-form label, .signup-form label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.login-form input, .signup-form input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.login-form button, .signup-form button {
+    background-color: #ff4500;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.login-form button:hover, .signup-form button:hover {
+    background-color: #e03e00;
+}
+
+/* Styles pour la page de démarrage (start.html) */
+.start-logo {
+    display: block;
+    width: 300px !important; /* Force la largeur */
+    height: 300px !important; /* Force la hauteur */
+    margin: 0 auto 20px;
+    animation: zoomIn 1s ease-in-out forwards;
+    object-fit: cover;
+    border: 1px solid red; /* Temporaire : ajoute une bordure pour vérifier les dimensions */
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.user-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logout-button, .back-button {
+    padding: 10px 20px;
+    background-color: #ff4500;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.logout-button:hover, .back-button:hover {
+    background-color: #e03e00;
+}
+
+.weeks {
+    margin: 20px 0;
+}
+
+.week-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.week-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    max-height: 400px; /* Limite la hauteur pour permettre un défilement */
+    overflow-y: auto; /* Ajoute un défilement vertical si nécessaire */
+    padding: 10px;
+}
+
+.week-box {
+    flex: 1 1 120px; /* Taille ajustée pour chaque semaine */
+    padding: 10px;
+    background-color: #ff4500;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+}
+.week-box {
+    flex: 1 1 150px;
+    padding: 15px;
+    background-color: #ff4500;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.week-box:hover {
+    background-color: #e03e00;
+}
+
+@media (max-width: 600px) {
+    .container {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .week-box {
+        flex: 1 1 100%;
+    }
+
+    .user-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+body.home-page {
+    background-color: #1a1a1a;
+    margin: 0;
+    padding: 0;
+}
+body.week-page {
+    background-color: #1a1a1a;
+    margin: 0;
+    padding: 0;
+}
+
+.exercise-list {
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.exercise-item {
+    background: rgba(51, 51, 51, 0.8);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: white;
+}
+
+.exercise-item h3 {
+    margin: 0 0 10px;
+    color: #ff4500;
+}
+
+.exercise-item p {
+    margin: 5px 0;
+}
+.exercise-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.exercise-checkbox {
+    display: none;
+}
+
+.checkmark {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #333;
+    border: 2px solid #ff4500;
+    border-radius: 3px;
+    margin-left: 5px;
+    position: relative;
+}
+
+.exercise-checkbox:checked + .checkmark {
+    background-color: #ff4500;
+}
+
+.exercise-checkbox:checked + .checkmark::after {
+    content: '✔';
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-page">
+    <div class="container">
+        <h1>Programme de Sport</h1>
+        <div class="login-form">
+            <h2>Connexion</h2>
+            <form id="login-form">
+                <label for="username">Nom d'utilisateur :</label>
+                <input type="text" id="username" required>
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" required>
+                <button type="submit">Se connecter</button>
+            </form>
+            <p id="error-message" style="color: red; display: none;"></p>
+            <p>Pas de compte ? <a href="#" id="signup-link">S'inscrire</a></p>
+        </div>
+        <div class="signup-form" style="display: none;">
+            <h2>Inscription</h2>
+            <form id="signup-form">
+                <label for="new-username">Nom d'utilisateur :</label>
+                <input type="text" id="new-username" required>
+                <label for="new-password">Mot de passe :</label>
+                <input type="password" id="new-password" required>
+                <button type="submit">S'inscrire</button>
+            </form>
+            <p id="signup-error" style="color: red; display: none;"></p>
+            <p>Déjà un compte ? <a href="#" id="login-link">Se connecter</a></p>
+        </div>
+    </div>
+    <script src="login.js"></script>
+</body>
+</html>
