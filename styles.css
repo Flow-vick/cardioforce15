@@ -323,3 +323,13 @@ body.week-page {
 .reset-btn {
     background-color: #1e90ff;
 }
+.progress {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    border: 1px solid #ff4500;
+}
