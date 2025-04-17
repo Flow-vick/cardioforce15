@@ -46,7 +46,7 @@ Semaine 4;Lundi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Mardi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Mercredi;Repos;;;;
 ;Jeudi;;Pompes maximum, tractions maximum;5 minutes par série, 3 de chaque avec 3 minutes de pause entre chaque série;;
-;Vendredi;Aphrodite;50 burpee, (CustomerService: 50 squats, 50 situps, 40, 30, 20, 10..;;;
+;Vendredi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Samedi;Repos;;;;
 ;Dimanche;Repos;;;;
 ;;;;;;
@@ -193,7 +193,9 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
         const progressDiv = document.createElement('div');
         progressDiv.classList.add('progress');
         progressDiv.innerHTML = `<p>Semaine ${weekNumber} : ${completedDays}/${totalDays} jours terminés (${progressPercentage}%)</p>`;
-        exerciseList.appendChild(progressDiv);
+        console.log(`Progression calculée : ${completedDays}/${totalDays} (${progressPercentage}%)`); // Log pour déboguer
+        exerciseList.insertBefore(progressDiv, exerciseList.firstChild); // Insérer au début de exerciseList
+        console.log("Élément de progression ajouté au DOM"); // Log pour confirmer
 
         // Afficher les exercices
         exercises.forEach((exercise, index) => {
@@ -269,6 +271,7 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
                 });
                 const updatedProgressPercentage = totalDays > 0 ? Math.round((updatedCompletedDays / totalDays) * 100) : 0;
                 progressDiv.innerHTML = `<p>Semaine ${weekNumber} : ${updatedCompletedDays}/${totalDays} jours terminés (${updatedProgressPercentage}%)</p>`;
+                console.log(`Progression mise à jour : ${updatedCompletedDays}/${totalDays} (${updatedProgressPercentage}%)`);
             });
         });
 
