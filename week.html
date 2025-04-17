@@ -1,22 +1,23 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Programme de Sport - Semaine</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body class="week-page">
-    <div class="container">
-        <h1 id="week-title">Semaine</h1>
-        <div id="exercise-list"></div>
-        <a href="start.html" class="week-box">Retour</a>
-        <div class="equipment">
-            <h3>Équipement recommandé</h3>
-            <p>Pour vos entraînements, je recommande ce <a href="[LIEN-AFFILIE-TAPIS]" target="_blank">tapis de yoga</a> pour plus de confort !</p>
-            <p>Restez hydraté avec cette <a href="[LIEN-AFFILIE-BOUTEILLE]" target="_blank">bouteille d’eau</a>.</p>
-        </div>
-    </div>
-    <script src="week.js"></script>
-</body>
-</html>
+.timer-container {
+    margin-top: 10px;
+}
+
+.timer-btn {
+    background-color: #ff4500;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.timer-btn:disabled {
+    background-color: #888;
+    cursor: not-allowed;
+}
+
+.timer-display {
+    margin-left: 10px;
+    color: #ff4500;
+    font-weight: bold;
+}
