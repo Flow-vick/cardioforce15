@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Vérifier si le paramètre week est présent
     if (!weekNumber) {
         alert("Veuillez sélectionner une semaine depuis la page d'accueil.");
-        window.location.href = 'start.html'; // Rediriger vers start.html
+        window.location.href = 'start.html';
         return;
     }
 
@@ -27,7 +27,7 @@ Semaine 1;Lundi;Vénus;50 pompes, 20 jacknives, 50 deep squats;X 4;;
 Semaine 2;Lundi;Artemis;100 pompes, 150 squat, 50 burpee;;;
 ;Mardi;Metis;10 burpee, 10 climber, 10 high-jump / 25 burpee, 25 climber, 25 high-jump / 10 burpee, 10 climber, 10 high-jump;X 3;;
 ;Mercredi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
-;Jeudi;;Burpee maximum;;;
+;Jeudi;;Burpee maximum;5min;;
 ;Vendredi;Artemis;100 pompes, 150 squat, 50 burpee;;;
 ;Samedi;Repos;;;;
 ;Dimanche;Repos;;;;
@@ -146,12 +146,10 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
         const cols = row.split(';');
         const week = cols[0].trim();
 
-        // Vérifie si la ligne commence une nouvelle semaine
         if (week.startsWith('Semaine')) {
             currentWeek = week;
         }
 
-        // Ajoute l'exercice uniquement si la semaine correspond
         if (currentWeek === `Semaine ${weekNumber}` && cols[1].trim()) {
             exercises.push({
                 week: currentWeek,
@@ -171,11 +169,28 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
             const exerciseDiv = document.createElement('div');
             exerciseDiv.classList.add('exercise-item');
 
-            // Clé unique pour chaque exercice dans localStorage
             const storageKey = `exercise_${weekNumber}_${exercise.day}_${index}`;
-            const isCompleted = localStorage.getItem(storageKey) === 'true';
+            let isCompleted = false;
+            try {
+                isCompleted = localStorage.getItem(storageKey) === 'true';
+            } catch (e) {
+                console.warn("localStorage non disponible : sauvegarde désactivée", e);
+            }
 
-            // Créer le contenu de l'exercice avec une checkbox
+            // Vérifier si l'exercice a une durée pour afficher un timer
+            let timerHtml = '';
+            let durationInSeconds = 0;
+            if (exercise.repsDuration && exercise.repsDuration.includes('min')) {
+                const minutes = parseInt(exercise.repsDuration.match(/\d+/)[0], 10);
+                durationInSeconds = minutes * 60;
+                timerHtml = `
+                    <div class="timer-container">
+                        <button class="timer-btn" data-duration="${durationInSeconds}">Démarrer le timer (${minutes} min)</button>
+                        <span class="timer-display" id="timer-${index}"></span>
+                    </div>
+                `;
+            }
+
             exerciseDiv.innerHTML = `
                 <div class="exercise-header">
                     <h3>${exercise.day}</h3>
@@ -188,16 +203,55 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
                 ${exercise.sessionName ? `<p><strong>Séance :</strong> ${exercise.sessionName}</p>` : ''}
                 <p><strong>Détails :</strong> ${exercise.sessionDetails}</p>
                 ${exercise.repsDuration ? `<p><strong>Rép/Durée :</strong> ${exercise.repsDuration}</p>` : ''}
+                ${timerHtml}
             `;
             exerciseList.appendChild(exerciseDiv);
         });
 
-        // Ajouter un gestionnaire d'événements pour les checkboxes
+        // Gérer les checkboxes
         const checkboxes = document.querySelectorAll('.exercise-checkbox');
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', (e) => {
                 const storageKey = e.target.getAttribute('data-storage-key');
-                localStorage.setItem(storageKey, e.target.checked);
+                try {
+                    localStorage.setItem(storageKey, e.target.checked);
+                } catch (e) {
+                    console.warn("localStorage non disponible : sauvegarde désactivée", e);
+                }
+            });
+        });
+
+        // Gérer les timers
+        const timerButtons = document.querySelectorAll('.timer-btn');
+        timerButtons.forEach((button, btnIndex) => {
+            button.addEventListener('click', () => {
+                const duration = parseInt(button.getAttribute('data-duration'), 10);
+                let timeLeft = duration;
+                const timerDisplay = document.getElementById(`timer-${btnIndex}`);
+                button.disabled = true;
+
+                const timerInterval = setInterval(() => {
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        timerDisplay.textContent = 'Terminé !';
+                        button.disabled = false;
+                        // Jouer un son à la fin (optionnel)
+                        const endSound = new Audio('thunder.mp3');
+                        endSound.play().catch(error => {
+                            console.warn("Erreur lors de la lecture du son :", error);
+                        });
+                    }
+                    timeLeft--;
+                }, 1000);
+
+                // Afficher le temps initial
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
             });
         });
     }
