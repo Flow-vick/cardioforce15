@@ -333,3 +333,70 @@ body.week-page {
     font-weight: bold;
     border: 1px solid #ff4500;
 }
+/* Thème sombre (par défaut) */
+body {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.exercise-item {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+h1, h3 {
+    color: #ffffff;
+}
+
+.week-box {
+    background-color: #ff4500;
+}
+
+/* Thème clair */
+body.light-theme {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+body.light-theme .container {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+body.light-theme .exercise-item {
+    background-color: rgba(200, 200, 200, 0.5);
+}
+
+body.light-theme h1, body.light-theme h3 {
+    color: #333;
+}
+
+body.light-theme .week-box {
+    background-color: #ff4500;
+}
+
+body.light-theme .progress {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+body.light-theme .back-btn {
+    background-color: #ff4500;
+    color: #ffffff;
+}
+
+/* Style du bouton de bascule */
+.theme-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #ff4500;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+}
