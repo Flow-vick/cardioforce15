@@ -400,3 +400,45 @@ body.light-theme .back-btn {
     cursor: pointer;
     z-index: 1000;
 }
+/* Ajouter ou vérifier ce style dans style.css */
+.back-button {
+    background-color: #ff4500;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+    display: block;
+    text-align: center;
+}
+
+.back-button:hover {
+    background-color: #e03e00;
+}
+
+/* S'assurer que les doublons de .exercise-item n'ont pas d'impact visuel */
+.exercise-item {
+    background: rgba(51, 51, 51, 0.8);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: white;
+}
+
+/* S'assurer que le thème clair applique les bons styles */
+body.light-theme .exercise-item {
+    background-color: rgba(200, 200, 200, 0.5);
+    color: #333;
+}
+
+body.light-theme .exercise-item h3 {
+    color: #ff4500;
+}
+
+/* S'assurer que les jours ont un style cohérent */
+.exercise-item h3 {
+    margin: 0 0 10px;
+    color: #ff4500;
+    text-transform: capitalize; /* S'assurer que les jours comme "Lundi" ne sont pas en majuscules */
+}
