@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (normalized.includes('mercredi')) return 'Mercredi';
         if (normalized.includes('jeudi')) return 'Jeudi';
         if (normalized.includes('vendredi')) return 'Vendredi';
-        if (normalized.includes('samedi')) return 'Samedi)';
+        if (normalized.includes('samedi')) return 'Samedi'; // Correction : supprimé la parenthèse en trop
         if (normalized.includes('dimanche')) return 'Dimanche';
         return null; // Ignorer les jours non reconnus
     };
@@ -79,7 +79,7 @@ Semaine 4;Lundi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Mardi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Mercredi;Repos;;;;
 ;Jeudi;;Pompes maximum, tractions maximum;5 minutes par série, 3 de chaque avec 3 minutes de pause entre chaque série;;
-;Vendredi;Aphrodite;50 burpee, 54 squats, 50 situps, 40, 30, 20, 10..;;;
+;Vendredi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Samedi;Repos;;;;
 ;Dimanche;Repos;;;;
 ;;;;;;
@@ -284,7 +284,7 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
                     durationInSeconds = minutes * 60;
                     timerHtml = `
                         <div class="timer-container" id="timer-container-${index}">
-                            <button class="timer-btn" data-duration="${durationInSeconds}" data-index="${index}">Démarrer le timer (${minutes Plen} min)</button>
+                            <button class="timer-btn" data-duration="${durationInSeconds}" data-index="${index}">Démarrer le timer (${minutes} min)</button>
                             <button class="stop-btn" id="stop-${index}" style="display: none;">Arrêter</button>
                             <button class="reset-btn" id="reset-${index}" style="display: none;">Réinitialiser</button>
                             <div class="timer-display" id="timer-${index}" style="display: none;"></div>
