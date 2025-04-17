@@ -311,3 +311,15 @@ body.week-page {
     color: #ff4500;
     font-weight: bold;
 }
+.stop-btn, .reset-btn {
+    background-color: #dc143c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+.reset-btn {
+    background-color: #1e90ff;
+}
