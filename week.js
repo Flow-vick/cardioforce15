@@ -145,7 +145,7 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
 
     // Parse le CSV (séparateur : point-virgule)
     rows.forEach((row, rowIndex) => {
-        const cols = row.split(';').map(col => col ? col.trim() : ''); // Nettoyer chaque colonne
+        const cols = row.split(';').map(col => col ? col.trim() : '');
         const week = cols[0];
 
         // Détecter si la ligne définit une nouvelle semaine
@@ -198,6 +198,8 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
                     timerHtml = `
                         <div class="timer-container" id="timer-container-${index}">
                             <button class="timer-btn" data-duration="${durationInSeconds}" data-index="${index}">Démarrer le timer (${minutes} min)</button>
+                            <button class="stop-btn" id="stop-${index}" style="display: none;">Arrêter</button>
+                            <button class="reset-btn" id="reset-${index}" style="display: none;">Réinitialiser</button>
                             <div class="timer-display" id="timer-${index}" style="display: none;"></div>
                         </div>
                     `;
@@ -239,21 +241,26 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
         // Gérer les timers
         const timerButtons = document.querySelectorAll('.timer-btn');
         timerButtons.forEach(button => {
+            let timerInterval = null; // Définir une variable pour stocker l'intervalle
+
             const startTimer = (e) => {
-                e.preventDefault(); // Prévenir tout comportement par défaut
-                console.log("Timer button clicked or touched!"); // Log pour déboguer
+                e.preventDefault();
+                console.log("Timer button clicked or touched!");
                 const duration = parseInt(button.getAttribute('data-duration'), 10);
                 const index = button.getAttribute('data-index');
                 let timeLeft = duration;
                 const timerDisplay = document.getElementById(`timer-${index}`);
-                timerDisplay.style.display = 'inline-block'; // Afficher le timer
+                const stopButton = document.getElementById(`stop-${index}`);
+                const resetButton = document.getElementById(`reset-${index}`);
+                timerDisplay.style.display = 'inline-block';
+                stopButton.style.display = 'inline-block';
+                resetButton.style.display = 'inline-block';
                 button.disabled = true;
 
-                // Précharger le son pour éviter les restrictions sur iPhone
                 const endSound = new Audio('thunder.mp3');
                 endSound.load();
 
-                const timerInterval = setInterval(() => {
+                timerInterval = setInterval(() => {
                     const minutes = Math.floor(timeLeft / 60);
                     const seconds = timeLeft % 60;
                     timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
@@ -262,9 +269,10 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
                         clearInterval(timerInterval);
                         timerDisplay.textContent = 'Terminé !';
                         button.disabled = false;
-                        // Jouer le son à la fin
+                        stopButton.style.display = 'none';
+                        resetButton.style.display = 'inline-block';
                         endSound.play().catch(error => {
-                            console.warn("Erreur lors de la lecture du son sur iPhone :", error);
+                            console.warn("Erreur lors de la lecture du son :", error);
                         });
                     }
                     timeLeft--;
@@ -273,10 +281,29 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
                 const minutes = Math.floor(timeLeft / 60);
                 const seconds = timeLeft % 60;
                 timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                // Gérer le bouton "Arrêter"
+                stopButton.addEventListener('click', () => {
+                    clearInterval(timerInterval);
+                    timerDisplay.textContent = 'Arrêté';
+                    button.disabled = false;
+                    stopButton.style.display = 'none';
+                    resetButton.style.display = 'inline-block';
+                });
+
+                // Gérer le bouton "Réinitialiser"
+                resetButton.addEventListener('click', () => {
+                    clearInterval(timerInterval);
+                    timerDisplay.textContent = '';
+                    timerDisplay.style.display = 'none';
+                    button.disabled = false;
+                    stopButton.style.display = 'none';
+                    resetButton.style.display = 'none';
+                });
             };
 
             button.addEventListener('click', startTimer);
-            button.addEventListener('touchstart', startTimer); // Compatibilité iPhone
+            button.addEventListener('touchstart', startTimer);
         });
     }
 });
