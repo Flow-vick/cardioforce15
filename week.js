@@ -297,9 +297,11 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
         });
 
         // Ajouter le bouton "Retour" une seule fois
-        const existingBackButton = document.querySelector('.back-button');
-        if (!existingBackButton) {
-            const backButton = document.createElement('button');
+        // Vérifier si un bouton avec l'ID spécifique existe déjà
+        let backButton = document.getElementById('back-button');
+        if (!backButton) {
+            backButton = document.createElement('button');
+            backButton.id = 'back-button'; // Ajouter un ID unique pour éviter les doublons
             backButton.classList.add('back-button');
             backButton.textContent = 'Retour';
             backButton.addEventListener('click', () => {
