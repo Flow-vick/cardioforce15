@@ -141,30 +141,38 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
     const exercises = [];
     let currentWeek = null;
 
-    // Parse le CSV (séparateur : point-virgule)
-    rows.forEach(row => {
-        const cols = row.split(';');
-        const week = cols[0].trim();
+    console.log(`Semaine cible : Semaine ${weekNumber}`); // Log pour déboguer
 
-        if (week.startsWith('Semaine')) {
+    // Parse le CSV (séparateur : point-virgule)
+    rows.forEach((row, rowIndex) => {
+        const cols = row.split(';').map(col => col.trim()); // Nettoyer chaque colonne
+        const week = cols[0];
+
+        // Détecter si la ligne définit une nouvelle semaine
+        if (week && week.startsWith('Semaine')) {
             currentWeek = week;
+            console.log(`Semaine détectée à la ligne ${rowIndex + 1} : ${currentWeek}`); // Log pour vérifier les semaines
         }
 
-        if (currentWeek === `Semaine ${weekNumber}` && cols[1].trim()) {
+        // Filtrer les exercices pour la semaine sélectionnée
+        if (currentWeek && currentWeek === `Semaine ${weekNumber}` && cols[1]) {
+            console.log(`Exercice trouvé pour ${currentWeek} : Jour ${cols[1]}`); // Log pour vérifier les exercices
             exercises.push({
                 week: currentWeek,
-                day: cols[1].trim(),
-                sessionName: cols[2].trim(),
-                sessionDetails: cols[3].trim(),
-                repsDuration: cols[4].trim()
+                day: cols[1],
+                sessionName: cols[2],
+                sessionDetails: cols[3],
+                repsDuration: cols[4]
             });
         }
     });
 
     // Afficher les exercices
     if (exercises.length === 0) {
+        console.log(`Aucun exercice trouvé pour la Semaine ${weekNumber}`); // Log pour déboguer
         exerciseList.innerHTML = '<p>Aucun exercice trouvé pour cette semaine.</p>';
     } else {
+        console.log(`Nombre d'exercices trouvés : ${exercises.length}`); // Log pour déboguer
         exercises.forEach((exercise, index) => {
             const exerciseDiv = document.createElement('div');
             exerciseDiv.classList.add('exercise-item');
