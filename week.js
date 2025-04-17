@@ -196,6 +196,9 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
         }
     });
 
+    // Vider le contenu existant de exerciseList pour éviter les doublons
+    exerciseList.innerHTML = '';
+
     // Afficher les exercices pour chaque jour de lundi à dimanche
     if (Object.keys(exercisesByDay).length === 0) {
         console.log(`Aucun exercice trouvé pour la Semaine ${weekNumber}`);
@@ -226,15 +229,11 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
 
         const progressPercentage = totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0;
 
-        // Vérifier si un élément de progression existe déjà, sinon en créer un
-        let progressDiv = document.querySelector('.progress');
-        if (!progressDiv) {
-            progressDiv = document.createElement('div');
-            progressDiv.classList.add('progress');
-            exerciseList.insertBefore(progressDiv, exerciseList.firstChild);
-            console.log("Élément de progression ajouté au DOM");
-        }
+        // Ajouter la barre de progression
+        let progressDiv = document.createElement('div');
+        progressDiv.classList.add('progress');
         progressDiv.innerHTML = `<p>Semaine ${weekNumber} : ${completedDays}/${totalDays} jours terminés (${progressPercentage}%)</p>`;
+        exerciseList.appendChild(progressDiv);
         console.log(`Progression calculée : ${completedDays}/${totalDays} (${progressPercentage}%)`);
 
         // Afficher les exercices pour chaque jour (lundi à dimanche)
@@ -294,6 +293,18 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
             `;
             exerciseList.appendChild(exerciseDiv);
         });
+
+        // Ajouter le bouton "Retour" une seule fois
+        const existingBackButton = document.querySelector('.back-button');
+        if (!existingBackButton) {
+            const backButton = document.createElement('button');
+            backButton.classList.add('back-button');
+            backButton.textContent = 'Retour';
+            backButton.addEventListener('click', () => {
+                window.location.href = 'start.html';
+            });
+            exerciseList.appendChild(backButton);
+        }
 
         // Gérer les checkboxes et mettre à jour la progression
         const checkboxes = document.querySelectorAll('.exercise-checkbox');
