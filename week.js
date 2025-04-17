@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("week.js chargé - Début de l'exécution");
+
     const urlParams = new URLSearchParams(window.location.search);
     const weekNumber = urlParams.get('week');
     const weekTitle = document.getElementById('week-title');
@@ -70,7 +72,7 @@ Semaine 4;Lundi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Mardi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Mercredi;Repos;;;;
 ;Jeudi;;Pompes maximum, tractions maximum;5 minutes par série, 3 de chaque avec 3 minutes de pause entre chaque série;;
-;Vendredi;Aphrodite;50 burpee, 54 squats, 50 situps, 40, 30, 20, 10..;;;
+;Vendredi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Samedi;Repos;;;;
 ;Dimanche;Repos;;;;
 ;;;;;;
@@ -201,6 +203,11 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
         exerciseList.removeChild(exerciseList.firstChild);
     }
 
+    // Supprimer tous les boutons "Retour" existants pour éviter les doublons
+    const existingBackButtons = document.querySelectorAll('.back-button');
+    console.log(`Nombre de boutons "Retour" trouvés avant suppression : ${existingBackButtons.length}`);
+    existingBackButtons.forEach(button => button.remove());
+
     // Afficher les exercices pour chaque jour de lundi à dimanche
     if (Object.keys(exercisesByDay).length === 0) {
         console.log(`Aucun exercice trouvé pour la Semaine ${weekNumber}`);
@@ -297,17 +304,19 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
         });
 
         // Ajouter le bouton "Retour" une seule fois
-        // Vérifier si un bouton avec l'ID spécifique existe déjà
         let backButton = document.getElementById('back-button');
         if (!backButton) {
+            console.log("Ajout d'un nouveau bouton Retour");
             backButton = document.createElement('button');
-            backButton.id = 'back-button'; // Ajouter un ID unique pour éviter les doublons
+            backButton.id = 'back-button';
             backButton.classList.add('back-button');
             backButton.textContent = 'Retour';
             backButton.addEventListener('click', () => {
                 window.location.href = 'start.html';
             });
             exerciseList.appendChild(backButton);
+        } else {
+            console.log("Bouton Retour déjà présent, pas d'ajout");
         }
 
         // Gérer les checkboxes et mettre à jour la progression
@@ -339,21 +348,23 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
 
         // Gérer le mode sombre/clair
         const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
-        const isDark = localStorage.getItem('theme') !== 'light'; // Par défaut, thème sombre
-        if (!isDark) {
-            body.classList.add('light-theme');
-            themeToggle.textContent = 'Mode sombre';
-        } else {
-            themeToggle.textContent = 'Mode clair';
-        }
+        if (themeToggle) {
+            const body = document.body;
+            const isDark = localStorage.getItem('theme') !== 'light'; // Par défaut, thème sombre
+            if (!isDark) {
+                body.classList.add('light-theme');
+                themeToggle.textContent = 'Mode sombre';
+            } else {
+                themeToggle.textContent = 'Mode clair';
+            }
 
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('light-theme');
-            const isLight = body.classList.contains('light-theme');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            themeToggle.textContent = isLight ? 'Mode sombre' : 'Mode clair';
-        });
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('light-theme');
+                const isLight = body.classList.contains('light-theme');
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                themeToggle.textContent = isLight ? 'Mode sombre' : 'Mode clair';
+            });
+        }
 
         // Gérer les timers
         const timerButtons = document.querySelectorAll('.timer-btn');
@@ -423,4 +434,6 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
             button.addEventListener('touchstart', startTimer);
         });
     }
+
+    console.log("week.js - Fin de l'exécution");
 });
