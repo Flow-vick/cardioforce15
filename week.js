@@ -6,12 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Vérifier si le paramètre week est présent
     if (!weekNumber) {
+        console.log("Aucun numéro de semaine trouvé dans l'URL.");
         alert("Veuillez sélectionner une semaine depuis la page d'accueil.");
         window.location.href = 'start.html';
         return;
     }
 
     weekTitle.textContent = `Semaine ${weekNumber}`;
+    console.log(`Semaine cible : Semaine ${weekNumber}`);
 
     // Données directement intégrées (contenu de exercices.csv)
     const csvData = `
@@ -141,38 +143,36 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
     const exercises = [];
     let currentWeek = null;
 
-    console.log(`Semaine cible : Semaine ${weekNumber}`); // Log pour déboguer
-
     // Parse le CSV (séparateur : point-virgule)
     rows.forEach((row, rowIndex) => {
-        const cols = row.split(';').map(col => col.trim()); // Nettoyer chaque colonne
+        const cols = row.split(';').map(col => col ? col.trim() : ''); // Nettoyer chaque colonne
         const week = cols[0];
 
         // Détecter si la ligne définit une nouvelle semaine
         if (week && week.startsWith('Semaine')) {
             currentWeek = week;
-            console.log(`Semaine détectée à la ligne ${rowIndex + 1} : ${currentWeek}`); // Log pour vérifier les semaines
+            console.log(`Semaine détectée à la ligne ${rowIndex + 1} : ${currentWeek}`);
         }
 
         // Filtrer les exercices pour la semaine sélectionnée
         if (currentWeek && currentWeek === `Semaine ${weekNumber}` && cols[1]) {
-            console.log(`Exercice trouvé pour ${currentWeek} : Jour ${cols[1]}`); // Log pour vérifier les exercices
+            console.log(`Exercice trouvé pour ${currentWeek} : Jour ${cols[1]}`);
             exercises.push({
                 week: currentWeek,
                 day: cols[1],
-                sessionName: cols[2],
-                sessionDetails: cols[3],
-                repsDuration: cols[4]
+                sessionName: cols[2] || '',
+                sessionDetails: cols[3] || '',
+                repsDuration: cols[4] || ''
             });
         }
     });
 
     // Afficher les exercices
     if (exercises.length === 0) {
-        console.log(`Aucun exercice trouvé pour la Semaine ${weekNumber}`); // Log pour déboguer
+        console.log(`Aucun exercice trouvé pour la Semaine ${weekNumber}`);
         exerciseList.innerHTML = '<p>Aucun exercice trouvé pour cette semaine.</p>';
     } else {
-        console.log(`Nombre d'exercices trouvés : ${exercises.length}`); // Log pour déboguer
+        console.log(`Nombre d'exercices trouvés : ${exercises.length}`);
         exercises.forEach((exercise, index) => {
             const exerciseDiv = document.createElement('div');
             exerciseDiv.classList.add('exercise-item');
@@ -180,23 +180,28 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
             const storageKey = `exercise_${weekNumber}_${exercise.day}_${index}`;
             let isCompleted = false;
             try {
-                isCompleted = localStorage.getItem(storageKey) === 'true';
+                if (localStorage) {
+                    isCompleted = localStorage.getItem(storageKey) === 'true';
+                }
             } catch (e) {
-                console.warn("localStorage non disponible : sauvegarde désactivée", e);
+                console.warn("localStorage non disponible ou bloqué : sauvegarde désactivée", e);
             }
 
             // Vérifier si l'exercice a une durée pour afficher un bouton timer
             let timerHtml = '';
             let durationInSeconds = 0;
             if (exercise.repsDuration && exercise.repsDuration.includes('min')) {
-                const minutes = parseInt(exercise.repsDuration.match(/\d+/)[0], 10);
-                durationInSeconds = minutes * 60;
-                timerHtml = `
-                    <div class="timer-container" id="timer-container-${index}">
-                        <button class="timer-btn" data-duration="${durationInSeconds}" data-index="${index}">Démarrer le timer (${minutes} min)</button>
-                        <div class="timer-display" id="timer-${index}" style="display: none;"></div>
-                    </div>
-                `;
+                const minutesMatch = exercise.repsDuration.match(/\d+/);
+                if (minutesMatch) {
+                    const minutes = parseInt(minutesMatch[0], 10);
+                    durationInSeconds = minutes * 60;
+                    timerHtml = `
+                        <div class="timer-container" id="timer-container-${index}">
+                            <button class="timer-btn" data-duration="${durationInSeconds}" data-index="${index}">Démarrer le timer (${minutes} min)</button>
+                            <div class="timer-display" id="timer-${index}" style="display: none;"></div>
+                        </div>
+                    `;
+                }
             }
 
             exerciseDiv.innerHTML = `
@@ -222,9 +227,11 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
             checkbox.addEventListener('change', (e) => {
                 const storageKey = e.target.getAttribute('data-storage-key');
                 try {
-                    localStorage.setItem(storageKey, e.target.checked);
+                    if (localStorage) {
+                        localStorage.setItem(storageKey, e.target.checked);
+                    }
                 } catch (e) {
-                    console.warn("localStorage non disponible : sauvegarde désactivée", e);
+                    console.warn("localStorage non disponible ou bloqué : sauvegarde désactivée", e);
                 }
             });
         });
@@ -232,14 +239,19 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
         // Gérer les timers
         const timerButtons = document.querySelectorAll('.timer-btn');
         timerButtons.forEach(button => {
-            const startTimer = () => {
-                console.log("Timer button clicked!"); // Log pour déboguer
+            const startTimer = (e) => {
+                e.preventDefault(); // Prévenir tout comportement par défaut
+                console.log("Timer button clicked or touched!"); // Log pour déboguer
                 const duration = parseInt(button.getAttribute('data-duration'), 10);
                 const index = button.getAttribute('data-index');
                 let timeLeft = duration;
                 const timerDisplay = document.getElementById(`timer-${index}`);
                 timerDisplay.style.display = 'inline-block'; // Afficher le timer
                 button.disabled = true;
+
+                // Précharger le son pour éviter les restrictions sur iPhone
+                const endSound = new Audio('thunder.mp3');
+                endSound.load();
 
                 const timerInterval = setInterval(() => {
                     const minutes = Math.floor(timeLeft / 60);
@@ -250,9 +262,9 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
                         clearInterval(timerInterval);
                         timerDisplay.textContent = 'Terminé !';
                         button.disabled = false;
-                        const endSound = new Audio('thunder.mp3');
+                        // Jouer le son à la fin
                         endSound.play().catch(error => {
-                            console.warn("Erreur lors de la lecture du son :", error);
+                            console.warn("Erreur lors de la lecture du son sur iPhone :", error);
                         });
                     }
                     timeLeft--;
