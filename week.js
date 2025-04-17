@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (normalized.includes('mercredi')) return 'Mercredi';
         if (normalized.includes('jeudi')) return 'Jeudi';
         if (normalized.includes('vendredi')) return 'Vendredi';
-        if (normalized.includes('samedi')) return 'Samedi'; // Correction : supprimé la parenthèse en trop
+        if (normalized.includes('samedi')) return 'Samedi';
         if (normalized.includes('dimanche')) return 'Dimanche';
         return null; // Ignorer les jours non reconnus
     };
@@ -177,6 +177,7 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
     let currentWeek = null;
 
     // Parse le CSV (séparateur : point-virgule)
+    console.log("Début du parsing du CSV...");
     rows.forEach((row, rowIndex) => {
         const cols = row.split(';').map(col => col ? col.trim() : '');
         const week = cols[0];
@@ -200,7 +201,7 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
                     repsDuration: cols[4] || ''
                 };
             } else {
-                console.log(`Jour ignoré (non reconnu ou hors lundi-dimanche) : ${cols[1]}`);
+                console.log(`Jour ignoré (non reconnu ou hors lundi-dimanche) à la ligne ${rowIndex + 1} : ${cols[1]}`);
             }
         }
     });
@@ -308,6 +309,7 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
                 ${timerHtml}
             `;
             exerciseList.appendChild(exerciseDiv);
+            console.log(`Ajout de l'exercice pour ${dayObj.displayName}`);
         });
 
         // Ajouter le bouton "Retour" une seule fois
@@ -371,10 +373,15 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
                 localStorage.setItem('theme', isLight ? 'light' : 'dark');
                 themeToggle.textContent = isLight ? 'Mode sombre' : 'Mode clair';
             });
+        } else {
+            console.log("Élément #theme-toggle non trouvé, mode sombre/clair non initialisé");
         }
 
         // Gérer les timers
         const timerButtons = document.querySelectorAll('.timer-btn');
+        if (timerButtons.length === 0) {
+            console.log("Aucun bouton de timer trouvé");
+        }
         timerButtons.forEach(button => {
             let timerInterval = null;
 
