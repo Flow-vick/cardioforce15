@@ -46,7 +46,7 @@ Semaine 4;Lundi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Mardi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Mercredi;Repos;;;;
 ;Jeudi;;Pompes maximum, tractions maximum;5 minutes par série, 3 de chaque avec 3 minutes de pause entre chaque série;;
-;Vendredi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
+;Vendredi;Aphrodite;50 burpee, (CustomerService: 50 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Samedi;Repos;;;;
 ;Dimanche;Repos;;;;
 ;;;;;;
@@ -173,6 +173,29 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
         exerciseList.innerHTML = '<p>Aucun exercice trouvé pour cette semaine.</p>';
     } else {
         console.log(`Nombre d'exercices trouvés : ${exercises.length}`);
+
+        // Calculer la progression
+        const totalDays = exercises.length;
+        let completedDays = 0;
+        exercises.forEach((exercise, index) => {
+            const storageKey = `exercise_${weekNumber}_${exercise.day}_${index}`;
+            try {
+                if (localStorage && localStorage.getItem(storageKey) === 'true') {
+                    completedDays++;
+                }
+            } catch (e) {
+                console.warn("localStorage non disponible ou bloqué : progression non mise à jour", e);
+            }
+        });
+        const progressPercentage = totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0;
+
+        // Afficher la progression
+        const progressDiv = document.createElement('div');
+        progressDiv.classList.add('progress');
+        progressDiv.innerHTML = `<p>Semaine ${weekNumber} : ${completedDays}/${totalDays} jours terminés (${progressPercentage}%)</p>`;
+        exerciseList.appendChild(progressDiv);
+
+        // Afficher les exercices
         exercises.forEach((exercise, index) => {
             const exerciseDiv = document.createElement('div');
             exerciseDiv.classList.add('exercise-item');
@@ -223,7 +246,7 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
             exerciseList.appendChild(exerciseDiv);
         });
 
-        // Gérer les checkboxes
+        // Gérer les checkboxes et mettre à jour la progression
         const checkboxes = document.querySelectorAll('.exercise-checkbox');
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', (e) => {
@@ -235,13 +258,24 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
                 } catch (e) {
                     console.warn("localStorage non disponible ou bloqué : sauvegarde désactivée", e);
                 }
+
+                // Mettre à jour la progression après un changement
+                let updatedCompletedDays = 0;
+                exercises.forEach((exercise, index) => {
+                    const key = `exercise_${weekNumber}_${exercise.day}_${index}`;
+                    if (localStorage.getItem(key) === 'true') {
+                        updatedCompletedDays++;
+                    }
+                });
+                const updatedProgressPercentage = totalDays > 0 ? Math.round((updatedCompletedDays / totalDays) * 100) : 0;
+                progressDiv.innerHTML = `<p>Semaine ${weekNumber} : ${updatedCompletedDays}/${totalDays} jours terminés (${updatedProgressPercentage}%)</p>`;
             });
         });
 
         // Gérer les timers
         const timerButtons = document.querySelectorAll('.timer-btn');
         timerButtons.forEach(button => {
-            let timerInterval = null; // Définir une variable pour stocker l'intervalle
+            let timerInterval = null;
 
             const startTimer = (e) => {
                 e.preventDefault();
