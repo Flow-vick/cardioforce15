@@ -174,7 +174,7 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
     } else {
         console.log(`Nombre d'exercices trouvés : ${exercises.length}`);
 
-        // Calculer la progression
+        // Calculer la progression initiale
         const totalDays = exercises.length;
         let completedDays = 0;
         exercises.forEach((exercise, index) => {
@@ -189,13 +189,16 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
         });
         const progressPercentage = totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0;
 
-        // Afficher la progression
-        const progressDiv = document.createElement('div');
-        progressDiv.classList.add('progress');
+        // Vérifier si un élément de progression existe déjà, sinon en créer un
+        let progressDiv = document.querySelector('.progress');
+        if (!progressDiv) {
+            progressDiv = document.createElement('div');
+            progressDiv.classList.add('progress');
+            exerciseList.insertBefore(progressDiv, exerciseList.firstChild);
+            console.log("Élément de progression ajouté au DOM");
+        }
         progressDiv.innerHTML = `<p>Semaine ${weekNumber} : ${completedDays}/${totalDays} jours terminés (${progressPercentage}%)</p>`;
         console.log(`Progression calculée : ${completedDays}/${totalDays} (${progressPercentage}%)`);
-        exerciseList.insertBefore(progressDiv, exerciseList.firstChild);
-        console.log("Élément de progression ajouté au DOM");
 
         // Afficher les exercices
         exercises.forEach((exercise, index) => {
