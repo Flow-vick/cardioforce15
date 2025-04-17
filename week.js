@@ -193,9 +193,9 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
         const progressDiv = document.createElement('div');
         progressDiv.classList.add('progress');
         progressDiv.innerHTML = `<p>Semaine ${weekNumber} : ${completedDays}/${totalDays} jours terminés (${progressPercentage}%)</p>`;
-        console.log(`Progression calculée : ${completedDays}/${totalDays} (${progressPercentage}%)`); // Log pour déboguer
-        exerciseList.insertBefore(progressDiv, exerciseList.firstChild); // Insérer au début de exerciseList
-        console.log("Élément de progression ajouté au DOM"); // Log pour confirmer
+        console.log(`Progression calculée : ${completedDays}/${totalDays} (${progressPercentage}%)`);
+        exerciseList.insertBefore(progressDiv, exerciseList.firstChild);
+        console.log("Élément de progression ajouté au DOM");
 
         // Afficher les exercices
         exercises.forEach((exercise, index) => {
@@ -273,6 +273,24 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
                 progressDiv.innerHTML = `<p>Semaine ${weekNumber} : ${updatedCompletedDays}/${totalDays} jours terminés (${updatedProgressPercentage}%)</p>`;
                 console.log(`Progression mise à jour : ${updatedCompletedDays}/${totalDays} (${updatedProgressPercentage}%)`);
             });
+        });
+
+        // Gérer le mode sombre/clair
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const isDark = localStorage.getItem('theme') !== 'light'; // Par défaut, thème sombre
+        if (!isDark) {
+            body.classList.add('light-theme');
+            themeToggle.textContent = 'Mode sombre';
+        } else {
+            themeToggle.textContent = 'Mode clair';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-theme');
+            const isLight = body.classList.contains('light-theme');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            themeToggle.textContent = isLight ? 'Mode sombre' : 'Mode clair';
         });
 
         // Gérer les timers
