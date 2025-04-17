@@ -265,3 +265,26 @@ body.week-page {
     transform: translate(-50%, -50%);
     font-size: 14px;
 }
+.timer-container {
+    margin-top: 10px;
+}
+
+.timer-btn {
+    background-color: #ff4500;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.timer-btn:disabled {
+    background-color: #888;
+    cursor: not-allowed;
+}
+
+.timer-display {
+    margin-left: 10px;
+    color: #ff4500;
+    font-weight: bold;
+}
