@@ -15,6 +15,17 @@ document.addEventListener('DOMContentLoaded', () => {
     weekTitle.textContent = `Semaine ${weekNumber}`;
     console.log(`Semaine cible : Semaine ${weekNumber}`);
 
+    // Liste fixe des jours (lundi à dimanche)
+    const daysOfWeek = [
+        { name: "Lundi", displayName: "Lundi" },
+        { name: "Mardi", displayName: "Mardi" },
+        { name: "Mercredi", displayName: "Mercredi" },
+        { name: "Jeudi", displayName: "Jeudi" },
+        { name: "Vendredi", displayName: "Vendredi" },
+        { name: "Samedi", displayName: "Samedi" },
+        { name: "Dimanche", displayName: "Dimanche" }
+    ];
+
     // Données directement intégrées (contenu de exercices.csv)
     const csvData = `
 Semaines;Jour;Nom de séance;Détail de la séance;Rép/Durée;;
@@ -140,7 +151,7 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
 `;
 
     const rows = csvData.trim().split('\n');
-    const exercises = [];
+    const exercisesByDay = {};
     let currentWeek = null;
 
     // Parse le CSV (séparateur : point-virgule)
@@ -154,30 +165,37 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
             console.log(`Semaine détectée à la ligne ${rowIndex + 1} : ${currentWeek}`);
         }
 
-        // Filtrer les exercices pour la semaine sélectionnée
+        // Récupérer les exercices pour la semaine sélectionnée
         if (currentWeek && currentWeek === `Semaine ${weekNumber}` && cols[1]) {
             console.log(`Exercice trouvé pour ${currentWeek} : Jour ${cols[1]}`);
-            exercises.push({
+            exercisesByDay[cols[1]] = {
                 week: currentWeek,
                 day: cols[1],
                 sessionName: cols[2] || '',
                 sessionDetails: cols[3] || '',
                 repsDuration: cols[4] || ''
-            });
+            };
         }
     });
 
-    // Afficher les exercices
-    if (exercises.length === 0) {
+    // Afficher les exercices pour chaque jour de lundi à dimanche
+    if (Object.keys(exercisesByDay).length === 0) {
         console.log(`Aucun exercice trouvé pour la Semaine ${weekNumber}`);
         exerciseList.innerHTML = '<p>Aucun exercice trouvé pour cette semaine.</p>';
     } else {
-        console.log(`Nombre d'exercices trouvés : ${exercises.length}`);
+        console.log(`Nombre de jours avec exercices : ${Object.keys(exercisesByDay).length}`);
 
         // Calculer la progression initiale
-        const totalDays = exercises.length;
+        const totalDays = daysOfWeek.length; // Toujours 7 jours (lundi à dimanche)
         let completedDays = 0;
-        exercises.forEach((exercise, index) => {
+
+        daysOfWeek.forEach((dayObj, index) => {
+            const exercise = exercisesByDay[dayObj.name] || {
+                day: dayObj.name,
+                sessionName: 'Repos',
+                sessionDetails: '',
+                repsDuration: ''
+            };
             const storageKey = `exercise_${weekNumber}_${exercise.day}_${index}`;
             try {
                 if (localStorage && localStorage.getItem(storageKey) === 'true') {
@@ -187,6 +205,7 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
                 console.warn("localStorage non disponible ou bloqué : progression non mise à jour", e);
             }
         });
+
         const progressPercentage = totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0;
 
         // Vérifier si un élément de progression existe déjà, sinon en créer un
@@ -200,8 +219,15 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
         progressDiv.innerHTML = `<p>Semaine ${weekNumber} : ${completedDays}/${totalDays} jours terminés (${progressPercentage}%)</p>`;
         console.log(`Progression calculée : ${completedDays}/${totalDays} (${progressPercentage}%)`);
 
-        // Afficher les exercices
-        exercises.forEach((exercise, index) => {
+        // Afficher les exercices pour chaque jour (lundi à dimanche)
+        daysOfWeek.forEach((dayObj, index) => {
+            const exercise = exercisesByDay[dayObj.name] || {
+                day: dayObj.name,
+                sessionName: 'Repos',
+                sessionDetails: '',
+                repsDuration: ''
+            };
+
             const exerciseDiv = document.createElement('div');
             exerciseDiv.classList.add('exercise-item');
 
@@ -236,7 +262,7 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
 
             exerciseDiv.innerHTML = `
                 <div class="exercise-header">
-                    <h3>${exercise.day}</h3>
+                    <h3>${dayObj.displayName}</h3>
                     <label class="checkbox-container">
                         Terminé
                         <input type="checkbox" class="exercise-checkbox" data-storage-key="${storageKey}" ${isCompleted ? 'checked' : ''}>
@@ -266,8 +292,8 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
 
                 // Mettre à jour la progression après un changement
                 let updatedCompletedDays = 0;
-                exercises.forEach((exercise, index) => {
-                    const key = `exercise_${weekNumber}_${exercise.day}_${index}`;
+                daysOfWeek.forEach((dayObj, index) => {
+                    const key = `exercise_${weekNumber}_${dayObj.name}_${index}`;
                     if (localStorage.getItem(key) === 'true') {
                         updatedCompletedDays++;
                     }
