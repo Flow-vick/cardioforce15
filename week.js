@@ -26,6 +26,19 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: "Dimanche", displayName: "Dimanche" }
     ];
 
+    // Normalisation des noms des jours
+    const normalizeDayName = (dayName) => {
+        const normalized = dayName.toLowerCase();
+        if (normalized.includes('lundi')) return 'Lundi';
+        if (normalized.includes('mardi')) return 'Mardi';
+        if (normalized.includes('mercredi')) return 'Mercredi';
+        if (normalized.includes('jeudi')) return 'Jeudi';
+        if (normalized.includes('vendredi')) return 'Vendredi';
+        if (normalized.includes('samedi')) return 'Samedi';
+        if (normalized.includes('dimanche')) return 'Dimanche';
+        return null; // Ignorer les jours non reconnus
+    };
+
     // Données directement intégrées (contenu de exercices.csv)
     const csvData = `
 Semaines;Jour;Nom de séance;Détail de la séance;Rép/Durée;;
@@ -167,14 +180,19 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
 
         // Récupérer les exercices pour la semaine sélectionnée
         if (currentWeek && currentWeek === `Semaine ${weekNumber}` && cols[1]) {
-            console.log(`Exercice trouvé pour ${currentWeek} : Jour ${cols[1]}`);
-            exercisesByDay[cols[1]] = {
-                week: currentWeek,
-                day: cols[1],
-                sessionName: cols[2] || '',
-                sessionDetails: cols[3] || '',
-                repsDuration: cols[4] || ''
-            };
+            const normalizedDay = normalizeDayName(cols[1]);
+            if (normalizedDay && daysOfWeek.some(day => day.name === normalizedDay)) {
+                console.log(`Exercice trouvé pour ${currentWeek} : Jour ${normalizedDay}`);
+                exercisesByDay[normalizedDay] = {
+                    week: currentWeek,
+                    day: normalizedDay,
+                    sessionName: cols[2] || '',
+                    sessionDetails: cols[3] || '',
+                    repsDuration: cols[4] || ''
+                };
+            } else {
+                console.log(`Jour ignoré (non reconnu ou hors lundi-dimanche) : ${cols[1]}`);
+            }
         }
     });
 
