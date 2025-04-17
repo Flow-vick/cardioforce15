@@ -70,7 +70,7 @@ Semaine 4;Lundi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Mardi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Mercredi;Repos;;;;
 ;Jeudi;;Pompes maximum, tractions maximum;5 minutes par série, 3 de chaque avec 3 minutes de pause entre chaque série;;
-;Vendredi;Aphrodite;50 burpee, 50 squats, 50 situps, 40, 30, 20, 10..;;;
+;Vendredi;Aphrodite;50 burpee, 54 squats, 50 situps, 40, 30, 20, 10..;;;
 ;Samedi;Repos;;;;
 ;Dimanche;Repos;;;;
 ;;;;;;
@@ -196,8 +196,10 @@ Semaine 15;Hell lundi;Aphrodite;50 burpee, 50 squats, 50 situps / 40 burpee, 40 
         }
     });
 
-    // Vider le contenu existant de exerciseList pour éviter les doublons
-    exerciseList.innerHTML = '';
+    // Vider complètement le contenu existant de exerciseList pour éviter les doublons
+    while (exerciseList.firstChild) {
+        exerciseList.removeChild(exerciseList.firstChild);
+    }
 
     // Afficher les exercices pour chaque jour de lundi à dimanche
     if (Object.keys(exercisesByDay).length === 0) {
